@@ -8,3 +8,12 @@ class Cart():
             cart = request.session['session_key'] = {}
 
         self.cart = cart
+
+    def add(self, product):
+        product_id = product.id
+        if product_id not in self.cart:
+            self.cart[product_id] = {'price': str(product.price)}
+        else:
+            pass
+
+        self.session.modified = True
