@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br><br><br>
+<div class="container">
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+
+                <img src="{{ product.image.url }}" class="img-fluid rounded-start">
+
+            </div>
+            <div class="col-md-8">
+              <center>
+                <div class="card-body">
+                    <h5 class="card-title">{{product.name}}</h5>
+                    <p class="card-text">{{product.description}}</p>
+                    {% if product.is_sale %}
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">{{product.name}}</h5>
+                            <strike>${{product.price}}</strike> &nbsp;
+                            ${{product.sale_price}}
+                            <br>
+                            ID: {{ product.id }}
+                        </div>
+                    </div>
+                    {% else %}
+                    ${{product.price}}
+                    <br>
+                    ID: {{ product.id }}
+                    {% endif %}
+                    <br>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                  <a class="btn btn-secondary" href="{% url 'home' %}">Home</a>
+                    <button class="btn btn-secondary" type="button" value="{{product.id}}" id="add-cart">Add To Cart</button>
+                </div>
+                </center>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<br><br><br><br><br><br>
+
+<script>
+    $(document).on('click', '#add-cart', function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_add' %}",
+            data: {
+                product_id : $('#add-cart').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+
+            success: function(json){
+                console.log(json)
+            },
+
+            error: function(xhr, errmsg, err){
+
+            }
+        })
+    })
+</script>
+{% endblock %}
